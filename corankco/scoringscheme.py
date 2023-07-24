@@ -35,11 +35,11 @@ class ForbiddenAssociationPenaltiesScoringScheme(Exception):
     """
     def __init__(self,
                  message="The first value of the first List must be 0. "
-                         "The second value of the first List must be > 0"
-                         "The fourth value of the first List must be <= the fifth value of the second List"
+                         "The second value of the first List must be > 0. "
+                         "The fourth value of the first List must be <= the fifth value of the second List. "
                          "The first and second values of the second List must be equal. "
-                         "The fourth and the fifth values of the second List must be equal"
-                         "The third value of the second List must be > 0"
+                         "The fourth and the fifth values of the second List must be equal. "
+                         "The third value of the second List must be > 0. "
                          "For instance, [[0., 1., 1., 0., 0., 0.], [1., 1., 0., 1., 1., 0.]]"):
         self.message = message
         super().__init__(self.message)
@@ -101,14 +101,14 @@ class ScoringScheme:
             penalties_copy[1].append(float(pen))
 
         # check assertions
-        if penalties_copy[1][0] != penalties_copy[1][1] or penalties_copy[1][3] != penalties_copy[1][4] \
-                or penalties_copy[0][3] > penalties_copy[0][4]:
-            raise ForbiddenAssociationPenaltiesScoringScheme()
-        if penalties_copy[0][0] > 0 or penalties_copy[1][2] > 0:
-            raise ForbiddenAssociationPenaltiesScoringScheme()
-        if penalties_copy[0][3] > penalties_copy[0][4]:
-            raise ForbiddenAssociationPenaltiesScoringScheme()
-        if penalties_copy[0][1] == 0:
+        if (
+            penalties_copy[0][0] > 0  or # The first value of the first list must be 0
+            penalties_copy[0][1] == 0 or # The second value of the first List must be > 0
+            penalties_copy[0][3] > penalties_copy[1][4] or # The fourth value of the first List must be <= the fifth value of the second List
+            penalties_copy[1][0] != penalties_copy[1][1] or # The first and second values of the second List must be equal
+            penalties_copy[1][3] != penalties_copy[1][4] or # The fourth and the fifth values of the second List must be equal
+            penalties_copy[1][2] == 0 # The third value of the second List must be > 0
+        ):
             raise ForbiddenAssociationPenaltiesScoringScheme()
         self._penalty_vectors = penalties_copy
 
